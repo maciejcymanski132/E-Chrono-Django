@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Technical service{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/repair.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href='/accounts'>My account</a>
+</div>
+<div class="review-container">
+    <img src="{% static 'imgs/glider_cross.jpg' %}">
+    <form>
+        <h2>Perform review</h2>
+        <label>User:</label>
+        <select class="form-control" name="inspector">
+            <option value=''>-</option>
+            {% for user in users %}
+            {% if user.inspector %}
+            <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+    <table class="reviews_table">
+        <tr>
+            <td>ID</td>
+            <td>Inspector</td>
+            <td>Wings check</td>
+            <td>Fuselage check</td>
+            <td>Sheathing check</td>
+        </tr>
+    </table>
+</div>
+
+
+{% endblock %}

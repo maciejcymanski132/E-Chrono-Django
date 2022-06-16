@@ -1,8 +1,29 @@
+.reviews_table {
+     border: 1px solid #e2d4d4;
+     border-radius: 8px;
+     margin-top: 30px;
+     margin-bottom: 30px;
+     text-align: center;
+     font-size: 13px;
+     display: fixed;
+     width:40em;
+     margin-left: 20px;
+}
+
+.review_form{
+text-align:center;
+}
+
+.review-container{
+padding:50px;
+display: flex;
+}
+
 
 .review_choice{
 display:flex;
 justify-content: center;
-margin-top: 75px;
+margin-top: 150px;
 }
 
 .choice {
@@ -154,7 +175,6 @@ margin-top: 50px;}
      text-align: center;
      font-size: 13px;
      display: fixed;
-     width:80em;
 }
  tr {
      display: flex

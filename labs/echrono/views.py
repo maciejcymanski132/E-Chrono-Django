@@ -121,7 +121,8 @@ def add(request):
         return redirect('manage')
     table = models_dictionary.get(request.GET.get('table'))
     arguments = {argument: request.POST.get(argument) for argument in request.POST if argument != 'csrfmiddlewaretoken'}
-    print(arguments)
     flip_booleans(arguments)
+    print(arguments)
+
     table(**arguments).save()
     return redirect('manage')

@@ -10,7 +10,29 @@
 {% endblock %}
 
 {% block content %}
-<div class="glider_choice">
-    <h2>Pick glider for review</h2>
+<div class="navbar">
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href='/accounts'>My account</a>
 </div>
+
+<div class="review_choice">
+    <form class='review_form' method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <h2>Pick glider for review</h2>
+
+            <label>Glider:</label>
+            <select class="form-control" name="glider">
+                <option value=''>-</option>
+                {% for glider in gliders %}
+                <option value="{{glider.id}}">{{glider.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" name="refuel">Review</button>
+    </form>
+</div>
+
 {% endblock %}

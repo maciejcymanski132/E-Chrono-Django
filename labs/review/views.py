@@ -20,8 +20,20 @@ def index(request):
 
 
 def glider(request):
+    if request.method == "POST":
+        return redirect('glider/' + request.POST.get('glider'))
     return render(request, 'review/glider.html', {"gliders": Glider.objects.all()})
 
 
 def airplane(request):
+    if request.method == "POST":
+        return redirect('airplane/' + request.POST.get('airplane'))
     return render(request, 'review/airplane.html', {"airplanes": Airplane.objects.all()})
+
+
+def glider_review(request, id):
+    return render(request, 'review/glider_review.html', {"glider": Glider.objects.filter(id=id).first()})
+
+
+def airplane_review(request, id):
+    return render(request, 'review/airplane_review.html', {"airplane": Airplane.objects.filter(id=id).first()})

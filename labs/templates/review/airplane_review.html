@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Technical service{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/repair.JPG' %}">
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="navbar">
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href='/accounts'>My account</a>
+</div>
+<div class="review-container">
+    <img src="{% static 'imgs/airplane_cross.jpg' %}">
+</div>
+{% endblock %}

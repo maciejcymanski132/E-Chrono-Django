@@ -2,6 +2,7 @@ from .models import *
 import datetime
 from .ValidationResponse import *
 
+
 class FlightDataValidator:
 
     @staticmethod
@@ -55,7 +56,7 @@ class FlightDataValidator:
         :return:
         """
         mid_air_pilots = []
-        active_flights = Chronometer.query.filter(Chronometer.active==True).all()
+        active_flights = Chronometer.query.filter(Chronometer.active == True).all()
         airplane_flights = AirplaneFlight.query.all()
         for f in active_flights:
             mid_air_pilots.append(f.pilot_passenger)
@@ -131,7 +132,7 @@ class FlightDataValidator:
         :return:
         """
         print(flight)
-        crew = [flight.instructor_id,flight.pilot_passenger_id,flight.winch_operator,flight.tow_pilot_id]
+        crew = [flight.instructor_id, flight.pilot_passenger_id, flight.winch_operator, flight.tow_pilot_id]
         for member in crew:
             if member and crew.count(member) > 1:
                 return ValidationResponse(False, "Same user cannot take more than one role in flight crew")
@@ -147,8 +148,6 @@ class FlightDataValidator:
         check_duplicate_response = FlightDataValidator.check_duplicate_ids(flight)
         if not check_duplicate_response.value:
             return check_duplicate_response
-
-
 
         check_users_permissions_response = FlightDataValidator.check_users_permissions(flight)
         if not check_users_permissions_response.value:
@@ -176,6 +175,7 @@ class FlightDataValidator:
             return check_if_aircrafts_midair_response
         return ValidationResponse(True, "")
 
+
 def flip_booleans(arguments):
     """
     In html you cannot simply state boolean value as tag value so this is function
@@ -183,7 +183,7 @@ def flip_booleans(arguments):
     :param arguments:
     :return:
     """
-    for key,value in arguments.items():
+    for key, value in arguments.items():
         if value == 'true':
             arguments[key] = True
         if value == 'false':
