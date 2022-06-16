@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="navbar">
+   <a href="/echrono">E-Chronometer</a>
+
+     <a href="/review">Technical Reviews</a>
+
+     <a href="/fuel">Fuel Service</a>
+
+   <a href='/accounts'>My account</a>
+</div>
+
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign Up</button>
+  </form>
+{% endblock %}

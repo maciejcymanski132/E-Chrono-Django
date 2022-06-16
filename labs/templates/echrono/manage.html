@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% block title %} Manage Database {% endblock %}
+{% load static %}
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/logo.JPG' %}">
+{% endblock %}
+{% block content %}
+<div class="navbar">
+   <a href="/">Main Page</a>
+   <a href='/echrono'>E-chrono</a>
+</div>
+<div class="manage">
+
+   <div class="container">
+      <div class="row">
+         <div class="jumbotron p-3">
+            <div class="col md-12">
+               <h2><b>Użytkownicy</b>
+                  <button type="button"  class="btn btn-success float-right" data-toggle="modal" data-target="#mymodalu">Dodaj nowego użytkownika</button> </h2>
+
+               <table>
+                  <tr>
+                     <th>Imię</th>
+                     <th>Nazwisko</th>
+                     <th>Pilot</th>
+                     <th>Instruktor</th>
+                     <th>Wyciągarkowy</th>
+                     <th>Holownik</th>
+                     <th>Akcje</th>
+                  </tr>
+                  {% for user in users %}
+                  <tr>
+                     <td>{{user.firstname}}</td>
+                     <td>{{user.lastname}}</td>
+                     <td>
+                     {% if user.glider_pilot %}
+                     <img src="https://thumbs.dreamstime.com/b/tick-mark-icon-flat-illustration-check-mark-vector-tick-mark-icon-flat-illustration-check-mark-vector-164317151.jpg" width="40" height="40">
+                     {% else %}
+                     <img src="https://www.vippng.com/png/detail/408-4081717_wrong-wrong-cross-symbol.png" width="40" height="40">
+                     {% endif %}
+                     </td>
+                     <td>
+                     {% if user.instructor %}
+                     <img src="https://thumbs.dreamstime.com/b/tick-mark-icon-flat-illustration-check-mark-vector-tick-mark-icon-flat-illustration-check-mark-vector-164317151.jpg" width="40" height="40">
+                     {% else %}
+                     <img src="https://www.vippng.com/png/detail/408-4081717_wrong-wrong-cross-symbol.png" width="40" height="40">
+                     {% endif %}
+                     </td>
+                     <td>
+                     {% if user.winch_operator %}
+                     <img src="https://thumbs.dreamstime.com/b/tick-mark-icon-flat-illustration-check-mark-vector-tick-mark-icon-flat-illustration-check-mark-vector-164317151.jpg" width="40" height="40">
+                     {% else %}
+                     <img src="https://www.vippng.com/png/detail/408-4081717_wrong-wrong-cross-symbol.png" width="40" height="40">
+                     {% endif %}
+                     </td>
+                     <td>
+                     {% if user.airplane_pilot %}
+                     <img src="https://thumbs.dreamstime.com/b/tick-mark-icon-flat-illustration-check-mark-vector-tick-mark-icon-flat-illustration-check-mark-vector-164317151.jpg" width="40" height="40">
+                     {% else %}
+                     <img src="https://www.vippng.com/png/detail/408-4081717_wrong-wrong-cross-symbol.png" width="40" height="40">
+                     {% endif %}
+                     </td>
+                     <td>
+                        <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaleditu{{user.id}}">Edytuj</a>
+                        <a href='/echrono/delete?table=User&id={{user.id}}' class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Usuń</a>
+                     </td>
+                  </tr>
+                  <div id="modaleditu{{user.id}}" class="modal fade" role="dialog">
+                     <div class="modal-dialog">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h4 class="modal-title">Aktualizuj Informacje</h4>
+                           </div>
+                           <div class="modal-body">
+                              <form action="/echrono/update?table=User" method="POST">
+                                 {% csrf_token %}
+                                 <div class="form-group">z
+                                    <label>Imię:</label>
+                                    <input type="hidden"  name="id" value="{{user.id}}">
+                                    <input type="text" class="form-control" name="firstname" value="{{user.firstname}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Nazwisko:</label>
+                                    <input type="text" class="form-control" name="lastname" value="{{user.lastname}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Pilot</label>
+                                    <input type="hidden"  name="glider_pilot" value="{{user.glider_pilot}}">
+                                    <select class="form-control" name="glider_pilot" >
+                                       {% if user.glider_pilot %}
+                                       <option value='true' selected="selected">True</option>
+                                       <option value='false'>False</option>
+                                       {% else %}
+                                       <option value='true'>True</option>
+                                       <option value='false' selected="selected">False</option>
+                                       {% endif %}
+                                    </select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Instruktor</label>
+                                    <input type="hidden"  name="instructor" value="{{user.instructor}}">
+                                    <select class="form-control" name="instructor" >
+                                       {% if user.instructor %}
+                                       <option value='true' selected="selected">True</option>
+                                       <option value='false'>False</option>
+                                       {% else %}
+                                       <option value='true'>True</option>
+                                       <option value='false' selected="selected">False</option>
+                                       {% endif %}
+                                    </select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Wyciągarkowy</label>
+                                    <input type="hidden"  name="winch_operator" value="{{user.winch_operator}}">
+                                    <select class="form-control" name="winch_operator" >
+                                       {% if user.winch_operator %}
+                                       <option value='true' selected="selected">True</option>
+                                       <option value='false'>False</option>
+                                       {% else %}
+                                       <option value='true'>True</option>
+                                       <option value='false' selected="selected">False</option>
+                                       {% endif %}
+                                    </select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Holownik</label>
+                                    <input type="hidden"  name="airplane_pilot" value="{{user.airplane_pilot}}">
+                                    <select class="form-control" name="airplane_pilot" >
+                                       {% if user.airplane_pilot %}
+                                       <option value='true' selected="selected">True</option>
+                                       <option value='false'>False</option>
+                                       {% else %}
+                                       <option value='true'>True</option>
+                                       <option value='false' selected="selected">False</option>
+                                       {% endif %}
+                                    </select>
+                                 </div>
+                                 <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Aktualizuj</button>
+                                 </div>
+                              </form>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </table>
+
+               <div id="mymodalu" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h4 class="modal-title">Dodaj użytkownika</h4>
+                        </div>
+                        <div class="modal-body">
+                           <form action="/echrono/add?table=User" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                 <label>Imię:</label>
+                                 <input type="text" class="form-control" name="firstname" required="1">
+                              </div>
+                              <div class="form-group">
+                                 <label>Nazwisko:</label>
+                                 <input type="text" class="form-control" name="lastname" required="1">
+                              </div>
+                              <div class="form-group">
+                                 <label>Pilot</label>
+                                 <select class="form-control" name="glider_pilot">
+                                    <option value='false'>False</option>
+                                    <option value='true'>True</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <label>Instruktor</label>
+                                 <select class="form-control" name="instructor">
+                                    <option value='false'>False</option>
+                                    <option value='true'>True</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <label>Wyciągarkowy</label>
+                                 <select class="form-control" name="winch_operator">
+                                    <option value='false'>False</option>
+                                    <option value='true'>True</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <label>Holownik</label>
+                                 <select class="form-control" name="airplane_pilot">
+                                    <option value='false'>False</option>
+                                    <option value='true'>True</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <button class="btn btn-primary" type="submit">Dodaj użytkownika</button>
+                              </div>
+                           </form>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="container">
+      <div class="row">
+         <div class="jumbotron p-3">
+            <div class="col md-12">
+               <h2><b>Szybowce</b>  <button type="button"  class="btn btn-success float-right"
+                  data-toggle="modal" data-target="#mymodalg">Dodaj nowy szybowiec</button> </h2>
+               <table style= "width:80em;">
+                  <tr style="width: 100%;">
+                     <th>Znaki Wywolawcze</th>
+                     <th>Czas w powietrzu</th>
+                     <th>Akcje</th>
+                  </tr>
+                  {% for g in gliders %}
+                  <tr>
+                     <td>{{g.name}}</td>
+                     <td>{{g.time_in_air}}</td>
+                     <td>
+                        <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaleditg{{g.id}}">Edytuj</a>
+                        <a href='/echrono/delete?table=Glider&id={{g.id}}' class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Usuń</a>
+                     </td>
+                  </tr>
+                  <div id="modaleditg{{g.id}}" class="modal fade" role="dialog">
+                     <div class="modal-dialog">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h4 class="modal-title">Aktualizuj Informacje</h4>
+                           </div>
+                           <div class="modal-body">
+                              <form action="/echrono/update?table=Glider" method="POST">
+                                 {% csrf_token %}
+                                 <div class="form-group">
+                                    <label>Znaki wywoławcze:</label>
+                                    <input type="hidden"  name="id" value="{{g.id}}">
+                                    <input type="text" class="form-control" name="name" value="{{g.name}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Czas w powietrzu (min):</label>
+                                    <input type="number" class="form-control" name="time_in_air" value="{{g.time_in_air}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Aktualizuj</button>
+                                 </div>
+                              </form>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </table>
+               <div id="mymodalg" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h4 class="modal-title">Dodaj szybowiec</h4>
+                        </div>
+                        <div class="modal-body">
+                           <form action="/echrono/add?table=Glider" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                 <label>Znaki wywoławcze:</label>
+                                 <input type="text" class="form-control" name="name" required="1">
+                              </div>
+                              <div class="form-group">
+                                 <button class="btn btn-primary" type="submit">Dodaj szybowiec</button>
+                              </div>
+                           </form>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="container" >
+      <div class="row" style="text-align: center;">
+         <div class="jumbotron p-3" style="text-align: center;">
+            <div class="col md-12" style="text-align: center;">
+               <h2><b>Samoloty</b>  <button type="button"  class="btn btn-success float-right"
+                  data-toggle="modal" data-target="#mymodala">Dodaj nowy samolot</button> </h2>
+               <table style= "width:80em;">
+                  <tr style="width: 100%;">
+                     <th>Znaki Wywolawcze</th>
+                     <th>Czas w powietrzu</th>
+                     <th>Akcje</th>
+                  </tr>
+                  {% for a in airplanes %}
+                  <tr>
+                     <td> {{ a.name }} </td>
+                     <td> {{ a.time_in_air }} </td>
+                     <td>
+                        <a href='/echrono/update' class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledita{{a.id}}">Edytuj</a>
+                        <a href='/echrono/delete?table=Airplane&id={{a.id}}' class="btn btn-danger btn-xs" onclick="return confirm('Na pewno chcesz usunąć tą pozycje ?')">Usuń</a>
+                     </td>
+                  </tr>
+                  <div id="modaledita{{a.id}}" class="modal fade" role="dialog">
+                     <div class="modal-dialog">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h4 class="modal-title">Aktualizuj Informacje</h4>
+                           </div>
+                           <div class="modal-body">
+                              <form action="/echrono/update?table=Airplane" method="POST">
+                                 {% csrf_token %}
+                                 <div class="form-group">
+                                    <label>Znaki wywoławcze:</label>
+                                    <input type="hidden"  name="id" value="{{a.id}}">
+                                    <input type="text" class="form-control" name="name" value="{{a.name}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <label>Czas w powietrzu (min):</label>
+                                    <input type="number" class="form-control" name="time_in_air" value="{{a.time_in_air}}">
+                                 </div>
+                                 <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Aktualizuj</button>
+                                 </div>
+                              </form>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </table>
+               <div id="mymodala" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h4 class="modal-title">Dodaj samolot</h4>
+                        </div>
+                        <div class="modal-body">
+                           <form action="/echrono/add?table=Airplane" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                 <label>Znaki wywoławcze:</label>
+                                 <input type="text" class="form-control" name="name" required="1">
+                              </div>
+                              <div class="form-group">
+                                 <button class="btn btn-primary" type="submit">Dodaj samolot</button>
+                              </div>
+                           </form>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div>
+{% endblock %}

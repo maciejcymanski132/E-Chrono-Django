@@ -1,0 +1,224 @@
+
+.review_choice{
+display:flex;
+justify-content: center;
+margin-top: 75px;
+}
+
+.choice {
+    margin: 50px;
+}
+ .airplanes {
+ margin-top: 50px;
+}
+
+.gliders {
+margin-top: 50px;}
+ .pods_container {
+     display: flex;
+     text-align: center;
+     justify-content: center;
+}
+ .fuel_transactions_table {
+     border: 1px solid #e2d4d4;
+     border-radius: 8px;
+     margin-top: 30px;
+     margin-bottom: 30px;
+     text-align: center;
+     font-size: 13px;
+     display: fixed;
+     width:40em;
+     margin-left: 20px;
+}
+ .transactions_container{
+     display:flex;
+     height: 40em;
+     margin-left: 20px;
+     margin-right:20px;
+}
+ .pod_view_container {
+     padding: 30px;
+     display: flex;
+     text-align: center;
+     display: flex;
+     text-align: center;
+     justify-content: center;
+}
+ .active{
+     width:900px;
+}
+ .chrono{
+     width:100%;
+}
+ .pod_container {
+     padding-left: 45px;
+     padding-right:45px;
+     padding-top: 35px;
+     margin-left: 20px;
+     margin-right:20px;
+}
+ .fuel_button{
+     background-color: green;
+}
+ .fuel_forms {
+     margin-right:80px;
+     margin-left:80px;
+}
+ .fuel_form{
+     margin-left: 50px;
+     margin-right:50px;
+     margin-bottom:100px;
+}
+ h2 {
+     text-align: center;
+}
+ button {
+     border: none;
+     color: white;
+     padding: 15px 32px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     border-radius: 4px;
+     margin-left: 10px;
+     margin-right: 10px;
+     margin-top: 10px;
+     text-transform: uppercase;
+     letter-spacing: 2px;
+}
+ .logo {
+     text-decoration: none;
+     font-weight: 1000;
+     font-size: 1.2em;
+     text-align: center;
+}
+ nav {
+     position: fixed;
+     background: #20272E;
+     height: 100vh;
+     padding: 1em;
+}
+ nav ul.primary-nav {
+     margin-top: 5em;
+}
+ nav li a {
+     color: white;
+     text-decoration: none;
+     display: flex;
+     padding: .5em;
+     font-size: 1.3em;
+     text-align: right;
+}
+ nav li a:hover {
+     font-weight: bold;
+     text-decoration: underline;
+}
+ #StartFlight {
+     background-color: #3a7064;
+    /* Green */
+}
+ #AddNew {
+     background-color: #283252;
+    /* Green */
+}
+ #Delete {
+     background-color: #283252;
+    /* Green */
+}
+ #EndFlight {
+     background-color: #283252;
+    /* Green */
+}
+ #StartFlight:hover {
+     background-color: #438868;
+    /* Green */
+}
+ #AddNew:hover {
+     background-color: #3f5175;
+    /* Green */
+}
+ #Delete:hover {
+     background-color: #3f5175;
+    /* Green */
+}
+ #EndFlight:hover {
+     background-color: #3f5175;
+    /* Green */
+}
+ table, #active_table{
+     border: 1px solid #e2d4d4;
+     border-radius: 8px;
+     margin-top: 30px;
+     margin-bottom: 30px;
+     text-align: center;
+     font-size: 13px;
+     display: fixed;
+     width:80em;
+}
+ tr {
+     display: flex
+}
+ tbody {
+     height:235px;
+     overflow-y:scroll;
+}
+ .manage{
+     text-align: center;
+     margin: auto;
+}
+ .container {
+     margin-left: 10px;
+     margin: auto;
+     padding-top: 1em
+}
+ .menu{
+     background-color: #a3c2c2;
+     height: 60px;
+     display: flex;
+     text-align:center;
+}
+ .navbar {
+     place-content: space-between;
+     width: 100%;
+     background-color: #75a3a3;
+     height: 60px;
+     overflow: hidden;
+}
+ a {
+     color: #f2f2f2;
+     margin-top: 0.25em;
+     font-weight: bold;
+     font-weight: 1000;
+     font-size: 1.3em;
+     text-align: center;
+}
+ tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+ tr:hover{
+    background-color: #919191;
+}
+ .nothover:hover{
+    background-color: white;
+}
+ .container-sm {
+     margin-left: 10px;
+     margin: left;
+     padding-top: 1em
+}
+ td {
+     padding-top: 10px;
+     padding-bottom: 10px;
+     height: 60px;
+     width: 100%;
+     display: table-cell;
+     vertical-align: bottom ;
+     text-align: middle;
+}
+ th {
+     padding-top: 10px;
+     padding-bottom: 10px;
+     text-transform: uppercase;
+     width: 100%;
+}

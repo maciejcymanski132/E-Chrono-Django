@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Fuel service{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/fuel.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+    <a href="/echrono">E-Chronometer</a>
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href="/fuel">Fuel Service</a>
+
+    <a href='/accounts'>My account</a>
+</div>
+
+<div class="pods_container">
+    {% for pod in fuelpods %}
+    <div class="pod_container">
+        <img src="{% static 'imgs/fuel.JPG' %}" height="100%" width="100%" style="border-radius: 40px;"/>
+        <h2>Pod {{pod.id}}</h2>
+        <h1>{{ pod.fill_percentage }} %</h1>
+        <a href="{{pod.id}}">
+            <button class="fuel_button">Use</button>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

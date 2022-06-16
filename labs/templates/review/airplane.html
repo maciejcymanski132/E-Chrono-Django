@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Technical service{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/repair.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href='/accounts'>My account</a>
+</div>
+
+<div class="review_choice">
+    <form class='review_form' method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <h2>Pick airplane for review</h2>
+
+            <label>Airplane:</label>
+            <select class="form-control" name="airplane">
+                <option value=''>-</option>
+                {% for airplane in airplanes %}
+                <option value="{{airplane.id}}">{{airplane.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" name="refuel">Review</button>
+    </form>
+</div>
+
+{% endblock %}

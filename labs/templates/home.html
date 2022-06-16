@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/logo1.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+   <a href="/echrono">E-Chronometer</a>
+
+     <a href="/review">Technical Reviews</a>
+
+     <a href="/fuel">Fuel Service</a>
+
+   <a href='/accounts'>My account</a>
+</div>
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+<a  href="echrono">
+  <img src="{% static 'imgs/logo.JPG' %}" height="100px" width="100px"/>
+</a>
+{% endblock %}

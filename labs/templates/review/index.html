@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Technical service{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/repair.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+    <a href="/echrono">E-Chronometer</a>
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href="/fuel">Fuel Service</a>
+
+    <a href='/accounts'>My account</a>
+</div>
+<div class="review_choice">
+
+    <div class="choice">
+        <a href="airplane">
+            <img src="{% static 'imgs/airplanes.jpg' %}" height="400px" width="500px">
+        </a>
+        <h2>Glider reviews</h2>
+    </div>
+
+    <div class="choice">
+        <a href="glider">
+            <img src="{% static 'imgs/glider.jpg' %}" height="400px" width="500px">
+        </a>
+
+        <h2>Airplane reviews</h2>
+    </div>
+</div>
+
+{% endblock %}

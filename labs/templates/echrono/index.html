@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% block title %} E-Chronometer {% endblock %}
+{% load static %}
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/logo.JPG' %}">
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+   <a href="/">Main Page</a>
+   <a href='manage'>Manage database</a>
+</div>
+
+<div class="container-sm" style="margin: left;">
+
+   <form action="#" method="POST">
+      {% csrf_token %}
+      <table class="active" id="activetable">
+         <tr class="nothover">
+            <th></th>
+            <th>Lot nr.</th>
+            <th>Instruktor</th>
+            <th>Pilot/Pasażer</th>
+            <th>Statek P</th>
+            <th>Czas Startu</th>
+         </tr>
+         {% for c in chrono %}
+         {% if c.active  %}
+         <tr>
+            <td><input type="checkbox" name=g{{c.flight_nr}} id="glider"></td>
+            <td>{{c.flight_nr}}</td>
+            <td>{{c.instructor.firstname}} {{c.instructor.lastname}}</td>
+            <td>{{c.pilot_passenger.firstname}} {{c.pilot_passenger.lastname}}</td>
+            <td>{{c.glider.name}}</td>
+            <td>{{c.time_of_start}}</td>
+         </tr>
+         {% endif %}
+         {% endfor %}
+
+         {% for ap in airplane_flights %}
+         <tr>
+            <td><input type="checkbox" name=a{{ap.flight_nr}}></td>
+            <td>{{ap.flight_nr}}</td>
+            {% for u in users %}
+            {% if u.id == ap.airplane_pilot %}
+            <td>{{u.firstname}} {{u.lastname}}</td>
+            {% endif %}
+            {% endfor %}
+            <td>-</td>
+            <td>{{ap.airplane}}</td>
+            <td>{{ap.time_of_start}}</td>
+         </tr>
+         {% endfor %}
+      </table>
+      <button id="EndFlight" type="submit" >ZAKONCZ</button>
+   </form>
+
+   <form action="#" method="POST">
+      {% csrf_token %}
+      <table class="chrono" id="chronotable">
+         <tr class="nothover">
+            <th></th>
+            <th>Lot nr.</th>
+            <th>Pilot/Instruktor</th>
+            <th>Pasazer/Uczen</th>
+            <th>Szybowiec</th>
+            <th>S.Holujacy</th>
+            <th>Czas Startu</th>
+            <th>Czas ladowania(SZ)</th>
+            <th>Czas ladowania(S)</th>
+            <th>Czas w powietrzu(SZ)</th>
+            <th>Czas w powietrzu(S)</th>
+            <th>Rodzaj startu</th>
+            <th>Wyciagarkowy/Pilot</th>
+         </tr>
+         {% for c in chrono %}
+         <tr>
+            <td><input type="checkbox"  name={{c.flight_nr}}></td>
+            <td>{{c.flight_nr}}</td>
+            <td>{{c.instructor.firstname}} {{c.instructor.lastname}}</td>
+            <td>{{c.pilot_passenger.firstname}} {{c.pilot_passenger.lastname}}</td>
+            <td>{{c.glider.name}}</td>
+            <td>{{c.airplane.name}}</td>
+            <td>{{c.time_of_start}}</td>
+            <td>{{c.glider_landing_time}}</td>
+            <td>{{c.airplane_landing_time}}</td>
+            <td>{{c.glider_tia}}</td>
+            <td>{{c.airplane_tia}}</td>
+            <td>{{c.start_type}}</td>
+            {% if c.winch_operator %}
+            <td>{{ c.winch_operator.firstname }} {{c.winch_operator.lastname}}</td>
+            {% else %}
+            <td>{{ c.tow_pilot.firstname }} {{c.tow_pilot.lastname}}</td>
+            {% endif %}
+         </tr>
+         {% endfor %}
+      </table>
+      <button id="StartFlight" type="submit">Rozpocznij lot</button>
+      <button id ="AddNew" type=button data-toggle="modal" data-target="#mymodal">Dodaj</button>
+      <button id ="Delete" type="submit" formaction="#">Usun</button>
+   </form>
+</div>
+
+
+
+
+
+
+
+
+<div id="mymodal" class="modal fade" role="dialog">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+   <h4 class="modal-title">Dodaj nowy lot</h4>
+</div>
+<div class="modal-body">
+   <form action="add_flight" method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+         <label>Pilot/Pasażer:</label>
+         <select class="form-control" name="pilot_passenger_id">
+            <option value="1">Pasażer</option>
+            {% for user in users %}
+            {% if user.glider_pilot %}
+            <option value="{{user.id}}"> {{user.firstname}} {{user.lastname}}</option>
+            {% endif %}
+            {% endfor %}
+         </select>
+      </div>
+
+      <div class="form-group">
+         <label>Instruktor:</label>
+         <select class="form-control" name="instructor_id">
+            <option value='999'>-</option>
+            {% for user in users %}
+            {% if user.instructor %}
+            <option value= "{{user.id}}"> {{user.firstname}} {{user.lastname}}</option>
+            {% endif %}
+            {% endfor %}
+         </select>
+      </div>
+
+      <div class="form-group">
+         <label>Szybowiec:</label>
+         <select name="glider_id">
+            {% for glider in gliders %}
+            <option value={{glider.id}}>{{glider.name}}</option>
+            {% endfor %}
+         </select>
+      </div>
+
+      <div class="form-group">
+         <label>Samolot Holujacy:</label>
+         <select name="airplane" id="airplane">
+            <option value=''>-</option>
+            {% for plane in airplanes %}
+            <option value={{plane.id}}>{{plane.name}}</option>
+            {% endfor %}
+         </select>
+      </div>
+      <div class="form-group">
+         <label>Rodzaj startu:</label>
+         <select name="start_type" id="start_type">
+            <option value="W">Wyciagarka</option>
+            <option value="S">Samolot</option>
+         </select>
+      </div>
+
+      <div class="form-group">
+         <label>Pilot samolotu:</label>
+         <select class="form-control" name="tow_pilot">
+            <option value='999'>-</option>
+            {% for user in users %}
+            {% if user.airplane_pilot %}
+            <option value= "{{user.id}}"> {{user.firstname}} {{user.lastname}}</option>
+            {% endif %}
+            {% endfor %}
+         </select>
+      </div>
+
+      <div class="form-group">
+      <label>Wyciagarkowy:</label>
+         <select class="form-control" name="winch_pilot_id">
+            <option value='999'>-</option>
+            {% for user in users %}
+            {% if user.winch_operator %}
+            <option value= "{{user.id}}"> {{user.firstname}} {{user.lastname}}</option>
+            {% endif %}
+            {% endfor %}
+         </select>
+      </div>
+      <div class="form-group">
+      <button class="btn btn-primary" type="submit">Dodaj</button>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+      </div>
+   </form>
+</div>
+</div>
+</div>
+{% endblock %}
