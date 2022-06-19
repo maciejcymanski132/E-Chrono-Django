@@ -10,25 +10,63 @@
 {% endblock %}
 
 {% block content %}
-<div class="navbar">
 
+<div class="navbar">
     <a href="/review">Technical Reviews</a>
 
     <a href='/accounts'>My account</a>
 </div>
+
 <div class="review-container">
-    <img src="{% static 'imgs/glider_cross.jpg' %}">
-    <form>
-        <h2>Perform review</h2>
-        <label>User:</label>
-        <select class="form-control" name="inspector">
-            <option value=''>-</option>
-            {% for user in users %}
-            {% if user.inspector %}
-            <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
+    <img src="{% static 'imgs/glider_cross.jpg' %}" width="400px">
+    <form method="post" class="review_form">
+        {% csrf_token %}
+        <h1 style="margin-bottom:40px;">Perform review</h1>
+
+        <div class="form-group">
+            <h3>Inspector</h3>
+            <select class="form-control" name="inspector">
+                <option value=''>-</option>
+                {% for user in inspectors %}
+                <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <h3>Wings check</h3>
+            <select class="form-control" name="wings">
+                <option value="true">Air worthy</option>
+                <option value="false">Damaged</option>
+                <option value="false">Investigation required</option>
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <h3>Fuselage check</h3>
+            <select class="form-control" name="fuselage">
+                <option value="true">Air worthy</option>
+                <option value="false">Damaged</option>
+                <option value="false">Investigation required</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <h3>Sheathing check</h3>
+            <select class="form-control" name="sheathing">
+                <option value="true">Air worthy</option>
+                <option value="false">Damaged</option>
+                <option value="false">Investigation required</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <h3>Notes</h3>
+            <input type="text" class="review_notes">
+        </div>
+
+        <button>REVIEW</button>
     </form>
     <table class="reviews_table">
         <tr>
@@ -37,7 +75,30 @@
             <td>Wings check</td>
             <td>Fuselage check</td>
             <td>Sheathing check</td>
+            <td>Date</td>
         </tr>
+        {% for inspection in glider_reviews %}
+        <tr>
+            <td>{{inspection.id}}</td>
+            <td>{{inspection.inspector_id.firstname}} {{inspection.inspector_id.lastname}}</td>
+            {% if inspection.wings_check %}
+            <td>Positive</td>
+            {% else %}
+            <td>Negative</td>
+            {% endif %}
+            {% if inspection.fuselage_check %}
+            <td>Positive</td>
+            {% else %}
+            <td>Negative</td>
+            {% endif %}
+            {% if inspection.sheathing_check %}
+            <td>Positive</td>
+            {% else %}
+            <td>Negative</td>
+            {% endif %}
+            <td>{{inspection.date|date:"D, d M, Y"}}</td>
+        </tr>
+        {% endfor %}
     </table>
 </div>
 

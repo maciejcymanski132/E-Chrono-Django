@@ -113,6 +113,7 @@ def update(request):
     flip_booleans(arguments)
     table = models_dictionary.get(request.GET.get('table'))
     table.objects.filter(id=request.POST.get('id')).update(**arguments)
+    print(arguments)
     return redirect('manage')
 
 
