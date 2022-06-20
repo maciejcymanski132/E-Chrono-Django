@@ -13,7 +13,7 @@
 
 <div class="container-sm" style="margin: left;">
 
-   <form action="#" method="POST">
+   <form action="stop_flight" method="POST">
       {% csrf_token %}
       <table class="active" id="activetable">
          <tr class="nothover">
@@ -21,41 +21,41 @@
             <th>Lot nr.</th>
             <th>Instruktor</th>
             <th>Pilot/Pasażer</th>
-            <th>Statek P</th>
+            <th>Aeroplan</th>
             <th>Czas Startu</th>
          </tr>
          {% for c in chrono %}
          {% if c.active  %}
          <tr>
-            <td><input type="checkbox" name=g{{c.flight_nr}} id="glider"></td>
-            <td>{{c.flight_nr}}</td>
-            <td>{{c.instructor.firstname}} {{c.instructor.lastname}}</td>
-            <td>{{c.pilot_passenger.firstname}} {{c.pilot_passenger.lastname}}</td>
-            <td>{{c.glider.name}}</td>
-            <td>{{c.time_of_start}}</td>
+            <td><input type="checkbox" name=g{{c.id}} id="glider"></td>
+            <td>{{c.id}}</td>
+            <td>{{c.instructor_id.firstname}} {{c.instructor_id.lastname}}</td>
+            <td>{{c.pilot_passenger_id.firstname}} {{c.pilot_passenger_id.lastname}}</td>
+            <td>{{c.glider_id.name}}</td>
+            <td>{{c.time_of_start|date:"H:m"}}</td>
          </tr>
          {% endif %}
          {% endfor %}
 
          {% for ap in airplane_flights %}
          <tr>
-            <td><input type="checkbox" name=a{{ap.flight_nr}}></td>
-            <td>{{ap.flight_nr}}</td>
+            <td><input type="checkbox" name=a{{ap.id}}></td>
+            <td>{{ap.id}}</td>
             {% for u in users %}
-            {% if u.id == ap.airplane_pilot %}
+            {% if u.id == ap.airplane_pilot.id %}
             <td>{{u.firstname}} {{u.lastname}}</td>
             {% endif %}
             {% endfor %}
             <td>-</td>
-            <td>{{ap.airplane}}</td>
-            <td>{{ap.time_of_start}}</td>
+            <td>{{ap.airplane.name}}</td>
+            <td>{{ap.time_of_start|date:"H:m"}}</td>
          </tr>
          {% endfor %}
       </table>
       <button id="EndFlight" type="submit" >ZAKONCZ</button>
    </form>
 
-   <form action="#" method="POST">
+   <form action="start_flight" method="POST">
       {% csrf_token %}
       <table class="chrono" id="chronotable">
          <tr class="nothover">
@@ -75,29 +75,29 @@
          </tr>
          {% for c in chrono %}
          <tr>
-            <td><input type="checkbox"  name={{c.flight_nr}}></td>
-            <td>{{c.flight_nr}}</td>
-            <td>{{c.instructor.firstname}} {{c.instructor.lastname}}</td>
-            <td>{{c.pilot_passenger.firstname}} {{c.pilot_passenger.lastname}}</td>
-            <td>{{c.glider.name}}</td>
-            <td>{{c.airplane.name}}</td>
-            <td>{{c.time_of_start}}</td>
-            <td>{{c.glider_landing_time}}</td>
-            <td>{{c.airplane_landing_time}}</td>
+            <td><input type="checkbox" name={{c.id}}></td>
+            <td>{{c.id}}</td>
+            <td>{{c.instructor_id.firstname}} {{c.instructor_id.lastname}}</td>
+            <td>{{c.pilot_passenger_id.firstname}} {{c.pilot_passenger_id.lastname}}</td>
+            <td>{{c.glider_id.name}}</td>
+            <td>{{c.airplane_id.name}}</td>
+            <td>{{c.time_of_start|date:"H:i"}}</td>
+            <td>{{c.glider_landing_time|date:"H:i"}}</td>
+            <td>{{c.airplane_landing_time|date:"H:i"}}</td>
             <td>{{c.glider_tia}}</td>
             <td>{{c.airplane_tia}}</td>
             <td>{{c.start_type}}</td>
-            {% if c.winch_operator %}
-            <td>{{ c.winch_operator.firstname }} {{c.winch_operator.lastname}}</td>
+            {% if c.winch_operator_id %}
+            <td>{{c.winch_operator_id.firstname }} {{c.winch_operator_id.lastname}}</td>
             {% else %}
-            <td>{{ c.tow_pilot.firstname }} {{c.tow_pilot.lastname}}</td>
+            <td>{{ c.tow_pilot_id.firstname }} {{c.tow_pilot_id.lastname}}</td>
             {% endif %}
          </tr>
          {% endfor %}
       </table>
       <button id="StartFlight" type="submit">Rozpocznij lot</button>
       <button id ="AddNew" type=button data-toggle="modal" data-target="#mymodal">Dodaj</button>
-      <button id ="Delete" type="submit" formaction="#">Usun</button>
+      <button id ="Delete" type="submit" formaction="delete_flight">Usun</button>
    </form>
 </div>
 
@@ -143,6 +143,7 @@
       </div>
 
       <div class="form-group">
+         {% csrf_token %}
          <label>Szybowiec:</label>
          <select name="glider_id">
             {% for glider in gliders %}
@@ -154,7 +155,7 @@
       <div class="form-group">
          <label>Samolot Holujacy:</label>
          <select name="airplane" id="airplane">
-            <option value=''>-</option>
+            <option value='999'>-</option>
             {% for plane in airplanes %}
             <option value={{plane.id}}>{{plane.name}}</option>
             {% endfor %}
@@ -202,3 +203,4 @@
 </div>
 </div>
 {% endblock %}
+

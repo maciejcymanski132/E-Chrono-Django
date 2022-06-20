@@ -9,3 +9,5 @@ urlpatterns = [
     path('glider/<int:id>', views.glider_review, name='glider'),
     path('airplane/<int:id>', views.airplane_review, name='airplane')
 ]
+
+handler404 = 'accounts.views.handle404'

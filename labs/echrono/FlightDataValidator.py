@@ -1,6 +1,8 @@
 from .models import *
-import datetime
 from .ValidationResponse import *
+from django.utils import timezone
+
+crew_roles = ["instructor_id", "pilot_passenger_id", "winch_operator_id", "tow_pilot_id"]
 
 
 class FlightDataValidator:
@@ -22,10 +24,7 @@ class FlightDataValidator:
     @staticmethod
     def create_chronometer_object(request):
         if FlightDataValidator.validate_add_flight_request(request):
-            print(User.objects.filter(id=request.POST.get('instructor_id')).first())
-            for user in User.objects.all():
-                print(user.id)
-            return Chronometer(
+            chrono = Chronometer(
                 instructor_id=User.objects.filter(id=request.POST.get('instructor_id')).first(),
                 pilot_passenger_id=User.objects.filter(id=request.POST.get('pilot_passenger_id')).first(),
                 start_type=request.POST.get('start_type'),
@@ -34,6 +33,7 @@ class FlightDataValidator:
                 glider_id=Glider.objects.filter(id=request.POST.get('glider_id')).first(),
                 airplane_id=Airplane.objects.filter(id=request.POST.get('airplane')).first()
             )
+            return chrono
 
     @staticmethod
     def check_if_aircrafts_midair(flight) -> bool:
@@ -42,9 +42,9 @@ class FlightDataValidator:
         :param flight:
         :return: Boolean value either aircrafts are free or not
         """
-        active_flights = Chronometer.query.filter(Chronometer.active == True).all()
+        active_flights = Chronometer.objects.filter(active=True).all()
         for af in active_flights:
-            if af.airplane.id == flight.airplane.id or af.glider.id == flight.glider.id:
+            if af.airplane.id == flight.airplane_id.id or af.glider.id == flight.glider.id:
                 return ValidationResponse(False, "Some of chosen aircrafts are mid-air")
         return ValidationResponse(True, "")
 
@@ -56,14 +56,14 @@ class FlightDataValidator:
         :return:
         """
         mid_air_pilots = []
-        active_flights = Chronometer.query.filter(Chronometer.active == True).all()
-        airplane_flights = AirplaneFlight.query.all()
+        active_flights = Chronometer.objects.filter(active=True).all()
+        airplane_flights = AirplaneFlight.objects.all()
         for f in active_flights:
-            mid_air_pilots.append(f.pilot_passenger)
-            mid_air_pilots.append(f.instructor)
+            mid_air_pilots.append(f.pilot_passenger_id)
+            mid_air_pilots.append(f.instructor_id)
         for f in airplane_flights:
-            mid_air_pilots.append(f.airplane_pilot)
-        if flight.instructor in mid_air_pilots or flight.pilot_passenger in mid_air_pilots or flight.tow_pilot in mid_air_pilots:
+            mid_air_pilots.append(f.airplane_pilot_id)
+        if flight.instructor_id in mid_air_pilots or flight.pilot_passenger_id in mid_air_pilots or flight.tow_pilot_id in mid_air_pilots:
             return ValidationResponse(False, "Some of chosen pilots are mid-air")
         return ValidationResponse(True, "")
 
@@ -75,21 +75,37 @@ class FlightDataValidator:
         :param flight:
         :return: Boolean value either users fit or not
         """
-        if flight.instructor:
-            if not flight.instructor.instructor:
-                return ValidationResponse(False, "User picked for instructor has no permissions to do that")
-        if flight.pilot_passenger.id != 1:
-            if not flight.pilot_passenger.glider_pilot:
-                return ValidationResponse(False, "User picked for pilot has no permissions to do that")
-        if flight.pilot_passenger.id == 1:
-            if not flight.instructor:
-                return ValidationResponse(False, "Passenger User cannot flight on his own")
-        if flight.winch_operator:
-            if not flight.winch_operator.winch_operator:
-                return ValidationResponse(False, "User picked for winch operator has no permissions to do that")
-        if flight.tow_pilot:
-            if not flight.tow_pilot.airplane_pilot:
-                return ValidationResponse(False, "User picked for tow pilot has no permissions to do that")
+        print('uno')
+        if flight.instructor_id:
+            if flight.instructor_id:
+                if not flight.instructor_id.instructor:
+                    return ValidationResponse(False, "User picked for instructor has no permissions to do that")
+        print('dos')
+
+        if flight.pilot_passenger_id:
+            if flight.pilot_passenger_id.id != 1:
+                if not flight.pilot_passenger_id.glider_pilot:
+                    return ValidationResponse(False, "User picked for pilot has no permissions to do that")
+        print('tres')
+
+        if flight.pilot_passenger_id:
+            if flight.pilot_passenger_id.id == 1:
+                if not flight.instructor_id:
+                    return ValidationResponse(False, "Passenger User cannot flight on his own")
+        print('quatro')
+
+        if flight.winch_operator_id:
+            if flight.winch_operator_id:
+                if not flight.winch_operator_id.winch_operator:
+                    return ValidationResponse(False, "User picked for winch operator has no permissions to do that")
+        print('cinco')
+
+        if flight.tow_pilot_id:
+            if flight.tow_pilot_id:
+                if not flight.tow_pilot_id.airplane_pilot:
+                    return ValidationResponse(False, "User picked for tow pilot has no permissions to do that")
+        print('siete')
+
         return ValidationResponse(True, "")
 
     @staticmethod
@@ -103,14 +119,18 @@ class FlightDataValidator:
         :param flight:
         :return:
         """
-        if flight.start_type == 'W' and flight.tow_pilot:
+        if flight.start_type == 'W' and flight.tow_pilot_id:
             return ValidationResponse(False, "There cannot be tow pilot in Winch-Launched flight")
-        if flight.start_type == 'W' and flight.airplane:
+
+        if flight.start_type == 'W' and flight.airplane_id:
             return ValidationResponse(False, "There cannot be tow airplane in Winch-Launched flight")
-        if flight.start_type == 'S' and flight.winch_operator:
+
+        if flight.start_type == 'S' and flight.winch_operator_id:
             return ValidationResponse(False, "There cannot be winch operator in tow-type flight")
-        if flight.start_type == 'S' and not flight.airplane:
+
+        if flight.start_type == 'S' and not flight.airplane_id:
             return ValidationResponse(False, "There must be a plane in tow-type flight")
+
         return ValidationResponse(True, "")
 
     @staticmethod
@@ -120,7 +140,8 @@ class FlightDataValidator:
         :param flight:
         :return: Boolean value
         """
-        if (flight.tow_pilot and flight.winch_operator) or (not flight.tow_pilot and not flight.winch_operator):
+        if (flight.tow_pilot_id and flight.winch_operator_id) or (
+                not flight.tow_pilot_id and not flight.winch_operator_id):
             return ValidationResponse(False, "There cannot be both tow pilot and winch pilot in one flight")
         return ValidationResponse(True, "")
 
@@ -131,8 +152,7 @@ class FlightDataValidator:
         :param flight:
         :return:
         """
-        print(flight)
-        crew = [flight.instructor_id, flight.pilot_passenger_id, flight.winch_operator, flight.tow_pilot_id]
+        crew = [getattr(flight, role) for role in crew_roles if hasattr(flight, role)]
         for member in crew:
             if member and crew.count(member) > 1:
                 return ValidationResponse(False, "Same user cannot take more than one role in flight crew")
@@ -145,22 +165,27 @@ class FlightDataValidator:
         :param flight:
         :return:
         """
+
         check_duplicate_response = FlightDataValidator.check_duplicate_ids(flight)
+        print('essa1')
         if not check_duplicate_response.value:
             return check_duplicate_response
-
         check_users_permissions_response = FlightDataValidator.check_users_permissions(flight)
+        print('essa2')
+
         if not check_users_permissions_response.value:
             return check_users_permissions_response
 
         check_start_type_response = FlightDataValidator.check_start_type(flight)
+        print('essa3')
+
         if not check_start_type_response.value:
             return check_start_type_response
-
         validate_operators_response = FlightDataValidator.validate_operators(flight)
+        print('essa4')
+
         if not validate_operators_response.value:
             return validate_operators_response
-
         return ValidationResponse(True, "")
 
     @staticmethod
@@ -169,7 +194,6 @@ class FlightDataValidator:
         check_if_pilots_midair_response = FlightDataValidator.check_if_pilots_midair(flight)
         if not check_if_pilots_midair_response.value:
             return check_if_pilots_midair_response
-
         check_if_aircrafts_midair_response = FlightDataValidator.check_if_aircrafts_midair(flight)
         if not check_if_aircrafts_midair_response.value:
             return check_if_aircrafts_midair_response
@@ -191,9 +215,9 @@ def flip_booleans(arguments):
 
 
 def time_difference(time1, time2):
-    t1 = datetime.datetime.strptime(time1, "%H:%M")
-    t2 = datetime.datetime.strptime(time2, "%H:%M")
-    return str(t2 - t1)[0:4]
+    # t1 = datetime.datetime.strptime(time1, "%H:%M")
+    # t2 = datetime.datetime.strptime(time2, "%H:%M")
+    return time2 - time1
 
 
 def chrono_to_airplane(chrono_object):
@@ -203,8 +227,8 @@ def chrono_to_airplane(chrono_object):
     :return:
     """
     return AirplaneFlight(
-        flight_nr=chrono_object.flight_nr,
+        id=chrono_object.id,
         time_of_start=chrono_object.time_of_start,
-        airplane_pilot=chrono_object.tow_pilot.id,
-        airplane=Airplane.query.filter(Airplane.id == chrono_object.airplane.id).first().name,
+        airplane_pilot=chrono_object.tow_pilot_id,
+        airplane=Airplane.objects.filter(id=chrono_object.airplane_id.id).first(),
     )

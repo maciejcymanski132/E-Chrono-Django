@@ -1,8 +1,12 @@
 from django.urls import path
 
-from .views import SignUpView
-
+from . import views
+from accounts.views import *
 
 urlpatterns = [
-    path("signup/", SignUpView.as_view(), name="signup"),
+    path("signup/", views.signup, name="signup"),
+    path("<int:id>", views.user_page, name='user_page'),
+    path("login", views.log_in, name='login')
 ]
+
+handler404 = 'accounts.views.handle404'

@@ -1,8 +1,30 @@
+.main_page{
+  width: 100em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.unlogged{
+    width: 100em;
+    display: flex;
+    margin-top:200px;
+    text-align:center;
+    display: block;
+    justify-content:center;
+  }
+
+.stuff{
+display: flex;
+height:15em;
+margin-top: 20px;
+border-radius:40px;
+justify-content:center;
+background-color:rgb(225, 225, 234);
+}
 .review_notes{
 width:500px;
 height: 175px;
 }
-
 
 .reviews_table {
      border: 1px solid #e2d4d4;
@@ -79,6 +101,8 @@ margin-top: 50px;}
 }
  .chrono{
      width:120em;
+     overflow: scroll;
+
 }
  .pod_container {
      padding-left: 45px;
@@ -177,6 +201,13 @@ margin-top: 50px;}
      background-color: #3f5175;
     /* Green */
 }
+
+.login{
+justify-content:center;
+display: flex;
+margin-top:70px;
+}
+
  table, #active_table{
      border: 1px solid #e2d4d4;
      border-radius: 8px;
@@ -185,6 +216,8 @@ margin-top: 50px;}
      text-align: center;
      font-size: 13px;
      display: fixed;
+     overflow: scroll;
+
 }
  tr {
      display: flex
