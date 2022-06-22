@@ -27,6 +27,10 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Log In</button>
+
     </form>
+    <a href="signup">
+        <button>Sign up</button>
+    </a>
 </div>
 {% endblock %}

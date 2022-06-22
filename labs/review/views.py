@@ -8,36 +8,45 @@ import datetime
 
 
 def index(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            if 'airplane' in request.POST:
-                return redirect('airplane/' + request.POST.get('airplane'))
+    try:
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                if 'airplane' in request.POST:
+                    return redirect('airplane/' + request.POST.get('airplane'))
 
-            if 'glider' in request.POST:
-                return redirect('glider/' + request.POST.get('glider'))
+                if 'glider' in request.POST:
+                    return redirect('glider/' + request.POST.get('glider'))
 
-        return render(request, 'review/index.html',
-                      {"airplanes": Airplane.objects.all(),
-                       "gliders": Glider.objects.all()})
-    return redirect('home')
+            return render(request, 'review/index.html',
+                          {"airplanes": Airplane.objects.all(),
+                           "gliders": Glider.objects.all()})
+        return redirect('home')
+    except:
+        return redirect('500')
 
 
 def glider(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            return redirect('glider/' + request.POST.get('glider'))
-        return render(request, 'review/glider.html',
-                      {"gliders": Glider.objects.all()})
-    return redirect('home')
+    try:
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                return redirect('glider/' + request.POST.get('glider'))
+            return render(request, 'review/glider.html',
+                          {"gliders": Glider.objects.all()})
+        return redirect('home')
+    except:
+        return redirect('500')
 
 
 def airplane(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            return redirect('airplane/' + request.POST.get('airplane'))
-        return render(request, 'review/airplane.html',
-                      {"airplanes": Airplane.objects.all()})
-    return redirect('home')
+    try:
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                return redirect('airplane/' + request.POST.get('airplane'))
+            return render(request, 'review/airplane.html',
+                          {"airplanes": Airplane.objects.all()})
+        return redirect('home')
+    except:
+        return redirect('500')
 
 
 def glider_review(request, id):
@@ -52,7 +61,7 @@ def glider_review(request, id):
                 glider_id=Glider.objects.filter(id=id).first(),
                 wings_check=arguments.get('wings'),
                 fuselage_check=arguments.get('fuselage'),
-                sheathing_check=arguments.get('sheathing'))
+                sheathing_check=arguments.get('sheathing')).save()
         return render(request, 'review/glider_review.html',
                       {"glider": Glider.objects.filter(id=id).first(),
                        "inspectors": User.objects.filter(inspector=True).all(),
@@ -76,7 +85,7 @@ def airplane_review(request, id):
                 fuselage_check=arguments.get('fuselage'),
                 sheathing_check=arguments.get('sheathing')).save()
 
-        return render(request, 'review/airplane_re',
+        return render(request, 'review/airplane_review.html',
                       {"airplane": Airplane.objects.filter(id=id).first(),
                        "inspectors": User.objects.filter(inspector=True).all(),
                        "airplane_reviews": AirplaneTechnicalReview.objects.filter(

@@ -75,37 +75,26 @@ class FlightDataValidator:
         :param flight:
         :return: Boolean value either users fit or not
         """
-        print('uno')
         if flight.instructor_id:
             if flight.instructor_id:
                 if not flight.instructor_id.instructor:
                     return ValidationResponse(False, "User picked for instructor has no permissions to do that")
-        print('dos')
-
-        if flight.pilot_passenger_id:
+        if hasattr(flight, 'pilot_passenger_id'):
             if flight.pilot_passenger_id.id != 1:
                 if not flight.pilot_passenger_id.glider_pilot:
                     return ValidationResponse(False, "User picked for pilot has no permissions to do that")
-        print('tres')
-
-        if flight.pilot_passenger_id:
+        if hasattr(flight, 'pilot_passenger_id'):
             if flight.pilot_passenger_id.id == 1:
                 if not flight.instructor_id:
                     return ValidationResponse(False, "Passenger User cannot flight on his own")
-        print('quatro')
-
         if flight.winch_operator_id:
             if flight.winch_operator_id:
                 if not flight.winch_operator_id.winch_operator:
                     return ValidationResponse(False, "User picked for winch operator has no permissions to do that")
-        print('cinco')
-
         if flight.tow_pilot_id:
             if flight.tow_pilot_id:
                 if not flight.tow_pilot_id.airplane_pilot:
                     return ValidationResponse(False, "User picked for tow pilot has no permissions to do that")
-        print('siete')
-
         return ValidationResponse(True, "")
 
     @staticmethod
@@ -167,23 +156,15 @@ class FlightDataValidator:
         """
 
         check_duplicate_response = FlightDataValidator.check_duplicate_ids(flight)
-        print('essa1')
         if not check_duplicate_response.value:
             return check_duplicate_response
         check_users_permissions_response = FlightDataValidator.check_users_permissions(flight)
-        print('essa2')
-
         if not check_users_permissions_response.value:
             return check_users_permissions_response
-
         check_start_type_response = FlightDataValidator.check_start_type(flight)
-        print('essa3')
-
         if not check_start_type_response.value:
             return check_start_type_response
         validate_operators_response = FlightDataValidator.validate_operators(flight)
-        print('essa4')
-
         if not validate_operators_response.value:
             return validate_operators_response
         return ValidationResponse(True, "")

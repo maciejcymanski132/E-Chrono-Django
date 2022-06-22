@@ -5,10 +5,14 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
+from django.contrib.auth.models import User
 
 
 def signup(request):
-    return render(request, 'accounts/signup.html')
+    if request.method == 'POST':
+        user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password1'))
+        user.save()
+    return render(request, 'accounts/signup.html', {'form': UserCreationForm()})
 
 
 def user_page(request, id):
@@ -22,6 +26,7 @@ def log_in(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            print(user)
             login(request, user)
             return redirect('home')
 
@@ -29,4 +34,8 @@ def log_in(request):
 
 
 def handle404(request, exception):
+    return redirect('404')
+
+
+def handle500(request):
     return redirect('404')

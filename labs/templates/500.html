@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block favicon %}
+<link rel="icon" type="image/x-icon" href="{% static 'imgs/logo1.JPG' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="navbar">
+    <a href="/echrono">E-Chronometer</a>
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href="/fuel">Fuel Service</a>
+
+    <a href='/accounts/{{user.id}}'>My account</a>
+</div>
+<div class="main_page">
+    <div class="stuff">
+        <h1 style="margin-top:70px;">There was some issue with loading page (500)</h1>
+    </div>
+</div>
+
+{% else %}
+<div class="navbar">
+    <a href="/echrono">E-Chronometer</a>
+
+    <a href="/review">Technical Reviews</a>
+
+    <a href="/fuel">Fuel Service</a>
+
+    <a href='/accounts/login'>Log in</a>
+</div>
+
+<div class="unlogged">
+    <h1>Page not found</h1>
+    <a href="{% url 'login' %}">
+        <button onclick="login">Log in</button>
+    </a>
+</div>
+{% endif %}
+{% endblock %}
